@@ -1,12 +1,17 @@
 import os
 
-FORBIDDEN_DIR = "/mnt/data/forbidden_words"
+# ✅ Используем локальную папку проекта вместо /mnt/data
+FORBIDDEN_DIR = "./forbidden_words"
 
 # Создаём папку при необходимости
 os.makedirs(FORBIDDEN_DIR, exist_ok=True)
 
 def load_forbidden_words():
     words = set()
+
+    if not os.path.exists(FORBIDDEN_DIR):
+        print(f"⚠️ WARNING: Directory {FORBIDDEN_DIR} does not exist.")
+        return words
 
     files = [f for f in os.listdir(FORBIDDEN_DIR) if f.endswith(".txt")]
     if not files:
