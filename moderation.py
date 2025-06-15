@@ -2,23 +2,26 @@ import os
 
 FORBIDDEN_DIR = "/mnt/data/forbidden_words"
 
+# Создаём папку при необходимости
+os.makedirs(FORBIDDEN_DIR, exist_ok=True)
+
 def load_forbidden_words():
     words = set()
-    if not os.path.exists(FORBIDDEN_DIR):
-        print(f"⚠️ WARNING: Directory {FORBIDDEN_DIR} does not exist.")
-        return words
 
-    for file in os.listdir(FORBIDDEN_DIR):
-        if file.endswith(".txt"):
-            file_path = os.path.join(FORBIDDEN_DIR, file)
-            try:
-                with open(file_path, encoding="utf-8") as f:
-                    for line in f:
-                        word = line.strip().lower()
-                        if word:
-                            words.add(word)
-            except Exception as e:
-                print(f"⚠️ WARNING: Could not read file {file_path}: {e}")
+    files = [f for f in os.listdir(FORBIDDEN_DIR) if f.endswith(".txt")]
+    if not files:
+        print(f"⚠️ WARNING: Directory {FORBIDDEN_DIR} is empty. Add .txt files with forbidden words.")
+
+    for file in files:
+        file_path = os.path.join(FORBIDDEN_DIR, file)
+        try:
+            with open(file_path, encoding="utf-8") as f:
+                for line in f:
+                    word = line.strip().lower()
+                    if word:
+                        words.add(word)
+        except Exception as e:
+            print(f"⚠️ WARNING: Could not read file {file_path}: {e}")
     return words
 
 FORBIDDEN_WORDS = load_forbidden_words()
